@@ -1,6 +1,6 @@
 local CombinedModules = {}
 
--- Module instantaaa
+-- Module instantaaawwwadd
 CombinedModules.instant = (function()
     -- âš¡ ULTRA SPEED AUTO FISHING v29.4 (Fast Mode - Safe Config Loading)
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -3296,46 +3296,49 @@ end)()
 
 -- Module TeleportModule
 CombinedModules.TeleportModule = (function()
+    local TeleportModule = {}
 
-local TeleportModule = {}
+    TeleportModule.Locations = {
+        ["Ancient Jungle"] = Vector3.new(1467.848, 7.447, -327.597),
+        ["Ancient Ruin"] = Vector3.new(6045.402, -588.601, 4608.938),
+        ["Coral Reefs"] = Vector3.new(-2921.858, 3.250, 2083.298),
+        ["Crater Island"] = Vector3.new(1078.454, 5.072, 5099.396),
+        ["Christmas Island"] = Vector3.new(1130.577, 23.855, 1554.232),
+        ["Christmas Cave"] = Vector3.new(535.280, -580.581, 8900.061),
+        ["Esoteric Depths"] = Vector3.new(3224.076, -1302.855, 1404.935),
+        ["Fisherman Island"] = Vector3.new(92.807, 9.531, 2762.082),
+        ["Kohana"] = Vector3.new(-643.305, 16.035, 622.361),
+        ["Kohana Volcano"] = Vector3.new(-572.024, 39.492, 112.493),
+        ["Lost Isle"] = Vector3.new(-3701.151, 5.426, -1058.911),
+        ["Sysiphus Statue"] = Vector3.new(-3656.562, -134.531, -964.317),
+        ["Sacred Temple"] = Vector3.new(1476.308, -21.850, -630.822),
+        ["Treasure Room"] = Vector3.new(-3601.568, -266.574, -1578.999),
+        ["Tropical Grove"] = Vector3.new(-2104.467, 6.268, 3718.255),
+        ["Underground Cellar"] = Vector3.new(2162.577, -91.198, -725.592),
+        ["Pirate Cove"] = Vector3.new(3334.473, 10.197, 3502.919),
+        ["Weather Machine"] = Vector3.new(-1513.925, 6.500, 1892.107)
+    }
 
-TeleportModule.Locations = {
-    ["Ancient Jungle"] = Vector3.new(1467.8480224609375, 7.447117328643799, -327.5971984863281),
-    ["Ancient Ruin"] = Vector3.new(6045.40234375, -588.600830078125, 4608.9375),
-    ["Coral Reefs"] = Vector3.new(-2921.858154296875, 3.249999761581421, 2083.2978515625),
-    ["Crater Island"] = Vector3.new(1078.454345703125, 5.0720038414001465, 5099.396484375),
-    ["Christmas Island"] = Vector3.new(1130.576904, 23.854950, 1554.231567),
-    ["Christmas Cave"] = Vector3.new(535.279724121093750, -580.581359863281250, 8900.060546875000000),
-    ["Esoteric Depths"] = Vector3.new(3224.075927734375, -1302.85498046875, 1404.9346923828125),
-    ["Fisherman Island"] = Vector3.new(92.80695343017578, 9.531265258789062, 2762.082275390625),
-    ["Kohana"] = Vector3.new(-643.3051147460938, 16.03544807434082, 622.3605346679688),
-    ["Kohana Volcano"] = Vector3.new(-572.0244750976562, 39.4923210144043, 112.49259185791016),
-    ["Lost Isle"] = Vector3.new(-3701.1513671875, 5.425841808319092, -1058.9107666015625),
-    ["Sysiphus Statue"] = Vector3.new(-3656.56201171875, -134.5314178466797, -964.3167724609375),
-    ["Sacred Temple"] = Vector3.new(1476.30810546875, -21.8499755859375, -630.8220825195312),
-    ["Treasure Room"] = Vector3.new(-3601.568359375, -266.57373046875, -1578.998779296875),
-    ["Tropical Grove"] = Vector3.new(-2104.467041015625, 6.268016815185547, 3718.2548828125),
-    ["Underground Cellar"] = Vector3.new(2162.577392578125, -91.1981430053711, -725.591552734375),
-    ["Pirate Cove"] = Vector3.new(3334.47, 10.2, 3502.92),
-    ["Weather Machine"] = Vector3.new(-1513.9249267578125, 6.499999523162842, 1892.10693359375)
-}
+    function TeleportModule.TeleportTo(name)
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
 
-function TeleportModule.TeleportTo(name)
-    local player = game.Players.LocalPlayer
-    local char = player.Character or player.CharacterAdded:Wait()
-    local root = char:WaitForChild("HumanoidRootPart")
+        local target = TeleportModule.Locations[name]
+        if not target then
+            warn("⚠️ Lokasi '" .. tostring(name) .. "' tidak ditemukan!")
+            return false
+        end
 
-    local target = TeleportModule.Locations[name]
-    if not target then
-        warn("âš ï¸ Lokasi '" .. tostring(name) .. "' tidak ditemukan!")
-        return
+        root.CFrame = CFrame.new(target)
+        print("✅ Teleported to:", name)
+        return true
     end
 
-    root.CFrame = CFrame.new(target)
-    print("âœ… Teleported to:", name)
-end
-
-return TeleportModule
+    -- Debug: Print jumlah lokasi saat module di-load
+    print("📍 TeleportModule loaded with " .. #TeleportModule.Locations .. " locations")
+    
+    return TeleportModule
 end)()
 
 -- Module TeleportToPlayer
