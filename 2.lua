@@ -1,5 +1,5 @@
 repeat task.wait() until game:IsLoaded()
-
+--pepek
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local localPlayer = Players.LocalPlayer
@@ -194,7 +194,7 @@ CurrentConfig = ConfigSystem.Load()
 
 local CombinedModules = nil
 local loadSuccess, loadError = pcall(function()
-    CombinedModules = loadstring(game:HttpGet("https://raw.githubusercontent.com/habibrodriguez7-art/GuiBaru/refs/heads/main/CombinedModule.lua"))()
+    CombinedModules = loadstring(game:HttpGet("https://raw.githubusercontent.com/habibrodriguez7-art/FixUp/refs/heads/main/dul.lua"))()
 end)
 
 if not loadSuccess then
