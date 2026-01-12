@@ -1,8 +1,5 @@
 repeat task.wait() until game:IsLoaded()
 
--- ============================================
--- ANTI-DUPLICATE SYSTEM
--- ============================================
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local localPlayer = Players.LocalPlayer
@@ -14,9 +11,6 @@ if existingGUI then
     task.wait(0.1)
 end
 
--- ============================================
--- SERVICES (Cached once)
--- ============================================
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -24,9 +18,6 @@ local HttpService = game:GetService("HttpService")
 
 local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- ============================================
--- CONNECTION MANAGER - Anti Memory Leak
--- ============================================
 local ConnectionManager = {
     _connections = {},
     _spawns = {}
@@ -66,9 +57,6 @@ function ConnectionManager:Cleanup()
     table.clear(self._spawns)
 end
 
--- ============================================
--- OPTIMIZED INSTANCE CREATOR
--- ============================================
 local function new(class, props)
     local inst = Instance.new(class)
     if props then
@@ -79,9 +67,6 @@ local function new(class, props)
     return inst
 end
 
--- ============================================
--- COLOR PALETTE
--- ============================================
 local colors = {
     primary = Color3.fromRGB(255, 140, 0),
     secondary = Color3.fromRGB(147, 112, 219),
@@ -97,17 +82,11 @@ local colors = {
     border = Color3.fromRGB(50, 50, 50),
 }
 
--- ============================================
--- WINDOW CONFIGURATION
--- ============================================
 local windowSize = UDim2.new(0, 400, 0, 260)
 local minWindowSize = Vector2.new(360, 230)
 local maxWindowSize = Vector2.new(520, 360)
 local sidebarWidth = 130
 
--- ============================================
--- CONFIG SYSTEM
--- ============================================
 local CONFIG_FOLDER = "LynxGUI_Configs"
 local CONFIG_FILE = CONFIG_FOLDER .. "/lynx_config.json"
 
@@ -253,7 +232,7 @@ local UnlockFPS = CombinedModules.UnlockFPS
 local FPSBooster = CombinedModules.FPSBooster
 local AutoBuyWeather = CombinedModules.AutoBuyWeather
 local Notify = CombinedModules.NotificationModule
-local GoodPerfectionStable = CombinedModules.GoodPerfectionStable
+local StableResult = CombinedModules.StableResult
 local PingFPSMonitor = CombinedModules.PingPanel
 local DisableRendering = CombinedModules.DisableRendering
 local MovementModule = CombinedModules.MovementModule
@@ -273,9 +252,6 @@ local EventTeleport = CombinedModules.EventTeleportDynamic or {
     TeleportNow = function() return false end
 }
 
--- ============================================
--- MAIN GUI CONTAINER
--- ============================================
 local gui = new("ScreenGui", {
     Name = "LynxGUI_Galaxy",
     Parent = CoreGui,
@@ -478,9 +454,6 @@ local resizeHandle = new("TextButton", {
 })
 new("UICorner", {Parent = resizeHandle, CornerRadius = UDim.new(0, 6)})
 
--- ============================================
--- PAGES SYSTEM
--- ============================================
 local pages = {}
 local currentPage = "Main"
 local navButtons = {}
@@ -514,9 +487,6 @@ local settingsPage = createPage("Settings")
 local infoPage = createPage("Info")
 mainPage.Visible = true
 
--- ============================================
--- CALLBACK REGISTRY
--- ============================================
 local CallbackRegistry = {}
 
 local function RegisterCallback(configPath, callback, componentType, defaultValue)
@@ -532,9 +502,6 @@ local function ExecuteConfigCallbacks()
     end
 end
 
--- ============================================
--- NAVIGATION BUTTON
--- ============================================
 local function createNavButton(text, imageId, page, order)
     local btn = new("TextButton", {
         Parent = navContainer,
@@ -591,9 +558,6 @@ local function createNavButton(text, imageId, page, order)
     return btn
 end
 
--- ============================================
--- PAGE SWITCHING
--- ============================================
 local function switchPage(pageName, titleText)
     if currentPage == pageName then return end
     for _, page in pairs(pages) do page.Visible = false end
@@ -636,10 +600,6 @@ ConnectionManager:Add("navWebhook", btnWebhook.MouseButton1Click:Connect(functio
 ConnectionManager:Add("navCameraView", btnCameraView.MouseButton1Click:Connect(function() switchPage("CameraView", "Camera View Settings") end))
 ConnectionManager:Add("navSettings", btnSettings.MouseButton1Click:Connect(function() switchPage("Settings", "Settings") end))
 ConnectionManager:Add("navInfo", btnInfo.MouseButton1Click:Connect(function() switchPage("Info", "About Lynx") end))
-
--- ============================================
--- UI COMPONENTS
--- ============================================
 
 -- CATEGORY
 local function makeCategory(parent, title)
@@ -1243,9 +1203,6 @@ local function makeTextBox(parent, label, placeholder, defaultValue, callback)
     return {Container = container, TextBox = textBox, SetValue = function(v) textBox.Text = tostring(v) lastSavedValue = tostring(v) end}
 end
 
--- ============================================
--- MAIN PAGE
--- ============================================
 local catAutoFishing = makeCategory(mainPage, "Auto Fishing")
 local currentInstantMode = "None"
 local fishingDelayValue = 1.30
@@ -1292,6 +1249,16 @@ makeInput(catAutoFishing, "Cancel Delay", "InstantFishing.CancelDelay", 0.19, fu
     if instant2 then instant2.Settings.CancelDelay = v end
 end)
 
+local catStableResult = makeCategory(mainPage, "Stable Result")
+makeToggle(catStableResult, "Enable Auto Good/Perfection", "Support.StableResult", function(on)
+    if CombinedModules.StableResult then 
+        if on then 
+            StableResult.Start() 
+        else 
+            StableResult.Stop() 
+        end 
+    end
+end)
 -- Blatant BETA Version
 local catBlatantBETA = makeCategory(mainPage, "Blatant BETA Version")
 makeToggle(catBlatantBETA, "Blatant Mode", "BlatantBETA.Enabled", function(on) 
@@ -1369,10 +1336,6 @@ end)
 
 makeToggle(catSupport, "Walk On Water", "Support.WalkOnWater", function(on)
     if WalkOnWater then if on then WalkOnWater.Start() else WalkOnWater.Stop() end end
-end)
-
-makeToggle(catSupport, "Good/Perfection Stable Mode", "Support.GoodPerfectionStable", function(on)
-    if GoodPerfectionStable then if on then GoodPerfectionStable.Start() else GoodPerfectionStable.Stop() end end
 end)
 
 -- Auto Favorite
@@ -1494,9 +1457,6 @@ makeToggle(catSkin, "Enable Skin Animation", "Support.SkinAnimation.Enabled", fu
     end
 end)
 
--- ============================================
--- TELEPORT PAGE
--- ============================================
 local locationItems = {}
 if TeleportModule then
     for name, _ in pairs(TeleportModule.Locations or {}) do table.insert(locationItems, name) end
@@ -1559,9 +1519,6 @@ makeToggle(catTeleport, "Enable Auto Teleport", "Teleport.AutoTeleportEvent", fu
     end
 end)
 
--- ============================================
--- SHOP PAGE
--- ============================================
 local catSell = makeCategory(shopPage, "Sell All")
 makeButton(catSell, "Sell All Now", function()
     if AutoSellSystem then AutoSellSystem.SellOnce() end
@@ -1654,9 +1611,6 @@ makeButton(catBait, "BUY SELECTED BAIT", function()
     if SelectedBait and RemoteBuyer then RemoteBuyer.BuyBait(BaitData[SelectedBait].id) end
 end)
 
--- ============================================
--- WEBHOOK PAGE
--- ============================================
 local catWebhook = makeCategory(webhookPage, "Discord Webhook Fish Caught")
 local currentWebhookURL = ConfigSystem.Get("Webhook.URL", "")
 local currentDiscordID = ConfigSystem.Get("Webhook.DiscordID", "")
@@ -1731,9 +1685,6 @@ makeButton(catWebhook, "Test Webhook Connection", function()
     end
 end)
 
--- ============================================
--- CAMERA VIEW PAGE
--- ============================================
 local catZoom = makeCategory(cameraViewPage, "Unlimited Zoom")
 makeToggle(catZoom, "Enable Unlimited Zoom", "CameraView.UnlimitedZoom", function(on)
     if UnlimitedZoomModule then
@@ -1796,9 +1747,6 @@ makeButton(catFreecam, "Reset Settings", function()
     end
 end)
 
--- ============================================
--- SETTINGS PAGE
--- ============================================
 local catAFK = makeCategory(settingsPage, "Protection Features")
 makeToggle(catAFK, "Enable Anti-AFK", "Settings.AntiAFK", function(on)
     if AntiAFK then if on then AntiAFK.Start() else AntiAFK.Stop() end end
@@ -1860,9 +1808,6 @@ makeTextBox(catHideStats, "Fake Level", "Enter fake level...", "", function(valu
     end
 end)
 
--- ============================================
--- INFO PAGE
--- ============================================
 local infoContainer = new("Frame", {
     Parent = infoPage,
     Size = UDim2.new(1, 0, 0, 150),
@@ -1903,14 +1848,11 @@ local linkButton = new("TextButton", {
 
 linkButton.MouseButton1Click:Connect(function()
     pcall(function() setclipboard("https://discord.gg/lynxx") end)
-    linkButton.Text = "✅ Link copied to clipboard!"
+    linkButton.Text = "Link copied to clipboard!"
     task.wait(2)
     linkButton.Text = "🔗 Discord: https://discord.gg/lynxx"
 end)
 
--- ============================================
--- MINIMIZE SYSTEM
--- ============================================
 local minimized = false
 local icon = nil
 local savedIconPos = UDim2.new(0, 20, 0, 100)
@@ -1987,9 +1929,6 @@ ConnectionManager:Add("minimizeBtn", btnMinHeader.MouseButton1Click:Connect(func
     end
 end))
 
--- ============================================
--- DRAGGING SYSTEM (Single connection)
--- ============================================
 local dragging, dragStart, startPos = false, nil, nil
 
 scriptHeader.InputBegan:Connect(function(input)
@@ -2014,9 +1953,6 @@ ConnectionManager:Add("inputEnded", UserInputService.InputEnded:Connect(function
     end
 end))
 
--- ============================================
--- RESIZING SYSTEM
--- ============================================
 local resizing = false
 local resizeStartPos, resizeStartSize = nil, nil
 
@@ -2050,9 +1986,6 @@ ConnectionManager:Add("inputEnded", UserInputService.InputEnded:Connect(function
     end
 end))
 
--- ============================================
--- INITIALIZE
--- ============================================
 win.Size = windowSize
 win.BackgroundTransparency = 0.15
 
