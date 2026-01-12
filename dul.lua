@@ -1,6 +1,6 @@
 local CombinedModules = {}
 
--- Module instantaaa
+-- Module instantaaawwdd
 CombinedModules.instant = (function()
     -- âš¡ ULTRA SPEED AUTO FISHING v29.4 (Fast Mode - Safe Config Loading)
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -3316,7 +3316,7 @@ TeleportModule.Locations = {
     ["Treasure Room"] = Vector3.new(-3601.568359375, -266.57373046875, -1578.998779296875),
     ["Tropical Grove"] = Vector3.new(-2104.467041015625, 6.268016815185547, 3718.2548828125),
     ["Underground Cellar"] = Vector3.new(2162.577392578125, -91.1981430053711, -725.591552734375),
-    ["Pirate Cove"] = Vector3.new(3397.346191406250000, 10.316670417785645, 3492.705566406250000),
+    ["Pirate Cove"] = Vector3.new(3334.472900390625000, 10.196969032287598, 3502.919189453125000),
     ["Weather Machine"] = Vector3.new(-1513.9249267578125, 6.499999523162842, 1892.10693359375)
 }
 
